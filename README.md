@@ -8,7 +8,7 @@ You will need to have NodeJS (https://nodejs.org), Git (https://git-scm.com/down
 
 Now, you'll need to start your MongoDB server by using the `mongod` command in your terminal.
 
-We will also need to clone this codelab's repository to have access to the basic front-end code that we will use to demonstrate that our API works. To do so, let's execute `git clone https://github.com/gdg-galway/gdg-mongo-rest.git` and navigate to our new folder to run `npm install`.
+We will also need to clone this codelab's repository to have access to the basic front-end code that we will use to demonstrate that our API works. To do so, let's execute `git clone https://github.com/gdg-galway/gdg-mongodb-rest.git` and navigate to our new folder to run `npm install`.
 
 Now that the setup is done, let's start coding!
 
