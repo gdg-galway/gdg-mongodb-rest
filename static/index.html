@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Tasks</title>
+    <style>
+        .user-form form:not([active]) {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Tasks</h1>
+    </header>
+    <main>
+        <section class="auth">
+            <div class="form user-form">
+                <form name="login" class="login-form" active>
+                    <h3>Login</h3>
+                    <div class="fieldgroup">
+                        <div class="field">
+                            <label>Email</label>
+                            <input class="input" name="email" type="email" maxlength="255" required>
+                        </div>
+                    </div>
+                    <div class="fieldgroup">
+                        <div class="field">
+                            <label>Password</label>
+                            <input class="input" name="password" type="password" minlength="8" maxlength="24" required>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button class="btn" type="submit">Login</button>
+                    </div>
+                    <div class="form-footer">
+                        <a onclick="selectForm('signup')">Create an account now!</a>
+                    </div>
+                </form>
+                <form name="signup" class="signup-form">
+                    <h3>Create an account</h3>
+                    <div class="fieldgroup">
+                        <div class="field">
+                            <label>Name</label>
+                            <input class="input" name="name" type="text" minlength="3" maxlength="24" required>
+                        </div>
+                    </div>
+                    <div class="fieldgroup">
+                        <div class="field">
+                            <label>Email</label>
+                            <input class="input" name="email" type="email" maxlength="255" required>
+                        </div>
+                    </div>
+                    <div class="fieldgroup">
+                        <div class="field">
+                            <label>Password</label>
+                            <input class="input" name="password" type="password" minlength="8" maxlength="24" required>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button class="btn" type="submit">Register</button>
+                    </div>
+                    <div class="form-footer">
+                        <a onclick="selectForm('login')">I already have an account!</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <script>
+        const forms = document.querySelectorAll('form')
+        const loginForm = document.querySelector('.login-form')
+        const signupForm = document.querySelector('.signup-form')
+        let user = null
+        let token = getCookie('token')
+
+        function getCookie(name) {
+            const value = document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`)
+            return value ? value[2] : null
+        }
+
+        function selectForm(name) {
+            forms.forEach(form => {
+                if(form.getAttribute('name') === name) form.setAttribute('active', '')
+                else form.removeAttribute('active')
+            })
+        }
+
+        async function getUser() {
+            try {
+                const res = await fetch('/api/v1/users/me')
+                if(res.ok) {
+                    user = await res.json()
+                    console.log(user)
+                }
+            }
+            catch(e) {
+                console.log(e)
+            }
+        }
+
+        loginForm.addEventListener('submit', async e => {
+            e.preventDefault()
+            const fields = Array.from(loginForm.querySelectorAll('.input')).reduce((fields, input) => {
+                fields[input.name] = input.value
+                return fields
+            }, {})
+            try {
+                const res = await fetch('/api/v1/auth', {
+                    method: 'POST',
+                    body: JSON.stringify(fields),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                if(res.ok) {
+                    user = await res.json()
+                    loginForm.reset()
+                }
+                else {
+                    console.log(await res.json())
+                }
+            }
+            catch(e) {
+                console.log(e)
+            }
+            return false
+        })
+
+        signupForm.addEventListener('submit', async e => {
+            e.preventDefault()
+            const fields = Array.from(signupForm.querySelectorAll('.input')).reduce((fields, input) => {
+                fields[input.name] = input.value
+                return fields
+            }, {})
+            try {
+                const res = await fetch('/api/v1/users', {
+                    method: 'POST',
+                    body: JSON.stringify(fields),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                if(res.ok) {
+                    user = await res.json()
+                    signupForm.reset()
+                }
+            }
+            catch(e) {
+                console.log(e)
+            }
+            return false
+        })
+
+        if(token) {
+            getUser()
+        }
+    </script>
+</body>
+</html>
