@@ -95,6 +95,9 @@ We will follow best practices and won't store password in clear in our database,
 We will also need to register our users in our database so we'll initialize a MongoDB client to do so using the `mongodb` official module.
 
 ```js
+const DB_URL = "mongodb://localhost:27017"
+const DB_NAME = "myapi"
+
 const bcrypt = require('bcrypt')
 const Validator = require('node-input-validator')
 const shortid = require('shortid')
@@ -323,6 +326,8 @@ You can open the web console to see the responses coming from your API!
 ## Congratulations!
 
 You have successfully completed this simple tutorial and created your own REST API using MongoDB, Express, JSON Web Tokens, bcrypt and more!
+
+You can also check out an article I wrote on Medium about REST APIs: https://medium.com/creative-black-pug-studio/restful-apis-5b0944900e6a.
 
 I hope you have enjoyed this codelab and I invite you to check our other tuts on https://github.com/gdg-galway.
 
